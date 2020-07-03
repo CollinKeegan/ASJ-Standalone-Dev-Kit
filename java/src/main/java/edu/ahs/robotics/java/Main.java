@@ -9,6 +9,6 @@ public class Main {
 
     public static void main(String[] args) {
         Point a = new Point(100, 100);
-        System.out.println(a.getCoords().X());
+        System.out.println(a.getX());
     }
 }
