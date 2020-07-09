@@ -14,21 +14,31 @@ public class Path {
      */
     public Path(Point[] rawPoints) {
         wayPoints = new ArrayList<>();
-        Point prevPoint = rawPoints[0];
 
-        if(rawPoints.length > 1){
-            for(int i = 1; i < wayPoints.size(); i++) {
+        try{
 
-                if(rawPoints[i] != prevPoint){
-                    wayPoints.add(new WayPoint(rawPoints[i]));
-                } else {
-                    throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
+            Point prevPoint = rawPoints[0];
+
+            if(rawPoints.length > 1){
+                for(int i = 1; i < wayPoints.size(); i++) {
+
+                    if(rawPoints[i] != prevPoint){
+                        wayPoints.add(new WayPoint(rawPoints[i]));
+                    } else {
+                        throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
+                    }
+
                 }
-
+            } else {
+                throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
             }
-        } else {
+
+        } catch(Exception e){
+
             throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
+
         }
+
 
     }
 
@@ -58,6 +68,10 @@ public class Path {
             this.deltaXFromPrevious = deltaXFromPrevious;
             this.deltaYFromPrevious = deltaYFromPrevious;
             this.distanceFromPrevious = distanceFromPrevious;
+        }
+
+        public WayPoint(Point rawPoint) {
+            this.point = rawPoint;
         }
 
         /**
