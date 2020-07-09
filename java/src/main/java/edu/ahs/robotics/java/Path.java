@@ -14,10 +14,20 @@ public class Path {
      */
     public Path(Point[] rawPoints) {
         wayPoints = new ArrayList<>();
+        Point prevPoint = rawPoints[0];
 
-        for(int i = 0; i < wayPoints.size(); i++) {
-            wayPoints.add(new WayPoint(rawPoints[i]));
+        if(rawPoints.length > 1){
+            for(int i = 1; i < wayPoints.size(); i++) {
 
+                if(rawPoints[i] != prevPoint){
+                    wayPoints.add(new WayPoint(rawPoints[i]));
+                } else {
+                    throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
+                }
+
+            }
+        } else {
+            throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
         }
 
     }
