@@ -17,7 +17,9 @@ public class Path {
 
         for(int i = 0; i < wayPoints.size(); i++) {
             wayPoints.add(new WayPoint(rawPoints[i]));
+
         }
+
     }
 
     /**
