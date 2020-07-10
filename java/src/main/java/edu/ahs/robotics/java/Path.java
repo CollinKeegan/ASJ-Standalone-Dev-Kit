@@ -18,12 +18,13 @@ public class Path {
         try{
 
             Point prevPoint = rawPoints[0];
+            wayPoints.add(new WayPoint(rawPoints[0], 0, 0, 0));
 
             if(rawPoints.length > 1){
                 for(int i = 1; i < rawPoints.length; i++) {
 
                     if(rawPoints[i] != prevPoint){
-                        wayPoints.add(new WayPoint(rawPoints[i], ));
+                        wayPoints.add(new WayPoint(rawPoints[i]));
                     } else {
                         throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
                     }
@@ -45,13 +46,13 @@ public class Path {
     /**
      * @return total distance of the path
      */
-    public double totalDistance() {
-        int distance = 0;
-
-        for(int i = 0; i < this.wayPoints.size() - 1; i++){
-            distance += wayPoints.
-        }
-    }
+    //public double totalDistance() {
+    //    int distance = 0;
+//
+  //      for(int i = 0; i < this.wayPoints.size() - 1; i++){
+    //        distance += wayPoints.
+     //   }
+    //}
 
     /**
      * @return a point at the supplied look-ahead distance along the path from the supplied current position
