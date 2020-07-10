@@ -20,10 +20,10 @@ public class Path {
             Point prevPoint = rawPoints[0];
 
             if(rawPoints.length > 1){
-                for(int i = 1; i < wayPoints.size(); i++) {
+                for(int i = 1; i < rawPoints.length; i++) {
 
                     if(rawPoints[i] != prevPoint){
-                        wayPoints.add(new WayPoint(rawPoints[i]));
+                        wayPoints.add(new WayPoint(rawPoints[i], ));
                     } else {
                         throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
                     }
@@ -46,7 +46,11 @@ public class Path {
      * @return total distance of the path
      */
     public double totalDistance() {
-        return 0.0;
+        int distance = 0;
+
+        for(int i = 0; i < this.wayPoints.size() - 1; i++){
+            distance += wayPoints.
+        }
     }
 
     /**
