@@ -8,7 +8,10 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Point a = new Point(100, 100);
-        System.out.println(a.getX());
+        Point a = new Point(4, 5);
+        Point b = new Point(4, 5);
+        if(a == b){
+            System.out.println("congrats your code isnt horrible");
+        }
     }
 }

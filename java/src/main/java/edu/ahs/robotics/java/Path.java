@@ -23,8 +23,9 @@ public class Path {
             if(rawPoints.length > 1){
                 for(int i = 1; i < rawPoints.length; i++) {
 
-                    if(rawPoints[i] != prevPoint){
-                        wayPoints.add(new WayPoint(rawPoints[i]));
+                    if(rawPoints[i].getX() != prevPoint.getX() || rawPoints[i].getY() != prevPoint.getY()){
+                        wayPoints.add(new WayPoint(rawPoints[i], rawPoints[i].getX() - rawPoints[i-1].getX(), rawPoints[i].getY() - rawPoints[i-1].getY(), Math.sqrt((rawPoints[i].getX() - rawPoints[i-1].getX())*(rawPoints[i].getX() - rawPoints[i-1].getX())+(rawPoints[i].getY() - rawPoints[i-1].getY())*(rawPoints[i].getY() - rawPoints[i-1].getY())));
+                        prevPoint = rawPoints[i];
                     } else {
                         throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
                     }
@@ -43,22 +44,28 @@ public class Path {
 
     }
 
+
+
     /**
      * @return total distance of the path
      */
-    //public double totalDistance() {
-    //    int distance = 0;
-//
-  //      for(int i = 0; i < this.wayPoints.size() - 1; i++){
-    //        distance += wayPoints.
-     //   }
-    //}
+    public double totalDistance() {
+
+        double distance = 0;
+
+        for(int i = 0; i < this.wayPoints.size() - 1; i++){
+            distance += wayPoints.distanceFromPreviousWaypoint();
+        }
+
+        return distance;
+
+    }
 
     /**
      * @return a point at the supplied look-ahead distance along the path from the supplied current position
      * Note that the point will usually be interpolated between the points that originally defined the Path
      */
-    public Path.WayPoint targetPoint(Point current, double lookAheadDistance) {
+    public Path.WayPoint targetPoint(Point current, double targetDistance) {
         return new WayPoint(new Point(0,0), 0.0, 0.0, 0.0);
     }
 
@@ -73,6 +80,10 @@ public class Path {
             this.deltaXFromPrevious = deltaXFromPrevious;
             this.deltaYFromPrevious = deltaYFromPrevious;
             this.distanceFromPrevious = distanceFromPrevious;
+        }
+
+        public double distanceFromPreviousWaypoint(){
+            return this.distanceFromPrevious;
         }
 
         public WayPoint(Point rawPoint) {
