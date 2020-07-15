@@ -54,7 +54,7 @@ public class Path {
         double distance = 0;
 
         for(int i = 0; i < this.wayPoints.size() - 1; i++){
-            distance += wayPoints.distanceFromPreviousWaypoint();
+            distance += wayPoints.get(i).distanceFromPreviousWaypoint();
         }
 
         return distance;
