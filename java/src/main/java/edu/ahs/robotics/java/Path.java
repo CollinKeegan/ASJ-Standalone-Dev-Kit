@@ -5,7 +5,11 @@ import java.util.ArrayList;
 public class Path {
 
     private ArrayList<WayPoint> wayPoints;
+    private int wayPointAlong;
 
+    public void resetWayPointAlong() {
+        this.wayPointAlong = 1;
+    }
 
     /**
      * @param rawPoints Array of X,Y points.  Consecutive duplicate points are discarded
@@ -24,13 +28,15 @@ public class Path {
                 for(int i = 1; i < rawPoints.length; i++) {
 
                     if(rawPoints[i].getX() != prevPoint.getX() || rawPoints[i].getY() != prevPoint.getY()){
-                        wayPoints.add(new WayPoint(rawPoints[i], rawPoints[i].getX() - rawPoints[i-1].getX(), rawPoints[i].getY() - rawPoints[i-1].getY(), Math.sqrt((rawPoints[i].getX() - rawPoints[i-1].getX())*(rawPoints[i].getX() - rawPoints[i-1].getX())+(rawPoints[i].getY() - rawPoints[i-1].getY())*(rawPoints[i].getY() - rawPoints[i-1].getY())));
+                        wayPoints.add(new WayPoint(rawPoints[i], rawPoints[i].getX() - rawPoints[i-1].getX(), rawPoints[i].getY() - rawPoints[i-1].getY(), Math.sqrt((rawPoints[i].getX() - rawPoints[i-1].getX())*(rawPoints[i].getX() - rawPoints[i-1].getX())+(rawPoints[i].getY() - rawPoints[i-1].getY())*(rawPoints[i].getY() - rawPoints[i-1].getY()))));
                         prevPoint = rawPoints[i];
                     } else {
                         throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
                     }
 
                 }
+                
+                wayPointAlong = 1;
             } else {
                 throw new IllegalArgumentException("A Path must be defined by at least two non-duplicate points.");
             }
@@ -66,7 +72,86 @@ public class Path {
      * Note that the point will usually be interpolated between the points that originally defined the Path
      */
     public Path.WayPoint targetPoint(Point current, double targetDistance) {
-        return new WayPoint(new Point(0,0), 0.0, 0.0, 0.0);
+
+
+        WayPoint returnWaypoint = null;
+
+
+        //sets nextWaypoint to the next waypoint along the path with a positive componentAlongPath value and sets wayPointAlong to the index on arraylists waypoints
+
+        WayPoint nextWaypoint = null;
+
+        for(; wayPointAlong < wayPoints.size() - 1; wayPointAlong++){
+
+            if(wayPoints.get(wayPointAlong).componentAlongPath(current) > 0){
+
+                nextWaypoint = wayPoints.get(wayPointAlong);
+
+            }
+
+        }
+
+
+        //returns correct waypoint
+
+        if(nextWaypoint.componentAlongPath(current) > targetDistance){
+
+            double z = nextWaypoint.componentAlongPath(current) - targetDistance;
+            double c = nextWaypoint.distanceFromPrevious;
+
+            double x = (z / c) * nextWaypoint.deltaXFromPrevious;
+            double y = (z / c) * nextWaypoint.deltaYFromPrevious;
+
+            double deltaX = nextWaypoint.point.getX() - wayPoints.get(wayPointAlong - 1).point.getX();
+            double deltaY = nextWaypoint.point.getY() - wayPoints.get(wayPointAlong - 1).point.getY()
+
+            return new WayPoint(new Point(nextWaypoint.point.getX() - x, nextWaypoint.point.getY() - y), deltaX, deltaY, Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+        }else if(nextWaypoint.componentAlongPath(current) == targetDistance){
+
+            return nextWaypoint;
+
+        }else {
+
+            boolean segmentFound = false;
+            int wayPointAfterTarget = wayPointAlong + 1;
+            double searchDistance = targetDistance - nextWaypoint.componentAlongPath(current);
+            WayPoint a;
+
+            while(segmentFound = false){
+
+                if (wayPoints.get(wayPointAfterTarget).distanceFromPrevious < targetDistance){
+
+                    a = wayPoints.get(wayPointAfterTarget);
+                    double z = a.distanceFromPrevious - searchDistance;
+                    double c = a.distanceFromPrevious;
+                    segmentFound = true;
+
+                    double x = (z / c) * wayPoints.get(wayPointAfterTarget).deltaXFromPrevious;
+                    double y = (z / c) * wayPoints.get(wayPointAfterTarget).deltaYFromPrevious;
+
+                    double deltaX = wayPoints.get(wayPointAfterTarget).point.getX() - wayPoints.get(wayPointAfterTarget - 1).point.getX();
+                    double deltaY = wayPoints.get(wayPointAfterTarget).point.getY() - wayPoints.get(wayPointAfterTarget - 1).point.getY()
+
+                    return new WayPoint(new Point(nextWaypoint.point.getX() - x, nextWaypoint.point.getY() - y), deltaX, deltaY, Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+
+                }else if (wayPoints.get(wayPointAfterTarget).distanceFromPrevious == targetDistance){
+
+
+
+                }
+
+            }
+
+        }
+
+    }
+
+    public static double pathComponent(){
+        WayPoint a = new WayPoint(new Point(4, 4), 4, 4, 5.65685424949);
+        System.out.println(a.componentAlongPath(new Point(2, 2)));
+        return(a.componentAlongPath(new Point(2, 2)));
     }
 
     public static class WayPoint {
@@ -82,12 +167,12 @@ public class Path {
             this.distanceFromPrevious = distanceFromPrevious;
         }
 
-        public double distanceFromPreviousWaypoint(){
-            return this.distanceFromPrevious;
+        public Point getPoint() {
+            return point;
         }
 
-        public WayPoint(Point rawPoint) {
-            this.point = rawPoint;
+        public double distanceFromPreviousWaypoint(){
+            return this.distanceFromPrevious;
         }
 
         /**

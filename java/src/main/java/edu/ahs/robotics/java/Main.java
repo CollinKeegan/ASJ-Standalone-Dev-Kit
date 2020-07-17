@@ -8,10 +8,8 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Point a = new Point(4, 5);
-        Point b = new Point(4, 5);
-        if(a == b){
-            System.out.println("congrats your code isnt horrible");
-        }
+        Path.pathComponent();
+        System.out.println(Path.pathComponent());
+
     }
 }
