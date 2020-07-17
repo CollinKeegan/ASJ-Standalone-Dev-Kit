@@ -81,6 +81,10 @@ public class Path {
 
         WayPoint nextWaypoint = null;
 
+        if(wayPoints.get(0).componentAlongPath(current) < 0){
+            returnWaypoint = wayPoints.get(0);
+        }
+
         for(; wayPointAlong < wayPoints.size() - 1; wayPointAlong++){
 
             if(wayPoints.get(wayPointAlong).componentAlongPath(current) > 0){
@@ -105,11 +109,11 @@ public class Path {
             double deltaX = nextWaypoint.point.getX() - wayPoints.get(wayPointAlong - 1).point.getX();
             double deltaY = nextWaypoint.point.getY() - wayPoints.get(wayPointAlong - 1).point.getY();
 
-            return new WayPoint(new Point(nextWaypoint.point.getX() - x, nextWaypoint.point.getY() - y), deltaX, deltaY, Math.sqrt(deltaX * deltaX + deltaY * deltaY));
+            returnWaypoint = new WayPoint(new Point(nextWaypoint.point.getX() - x, nextWaypoint.point.getY() - y), deltaX, deltaY, Math.sqrt(deltaX * deltaX + deltaY * deltaY));
 
         }else if(nextWaypoint.componentAlongPath(current) == targetDistance){
 
-            return nextWaypoint;
+            returnWaypoint = nextWaypoint;
 
         }else {
 
@@ -121,6 +125,12 @@ public class Path {
             while(segmentFound = false){
 
                 if (wayPoints.get(wayPointAfterTarget).distanceFromPrevious < targetDistance){
+
+                    if((wayPointAfterTarget == (wayPoints.size() - 1)) && (searchDistance > wayPoints.get(wayPointAfterTarget).distanceFromPrevious)){
+
+                        returnWaypoint = wayPoints.get(wayPointAfterTarget);
+
+                    }
 
                     a = wayPoints.get(wayPointAfterTarget);
                     double z = a.distanceFromPrevious - searchDistance;
@@ -138,13 +148,17 @@ public class Path {
 
                 }else if (wayPoints.get(wayPointAfterTarget).distanceFromPrevious == targetDistance){
 
-                    return wayPoints.get(wayPointAfterTarget);
                     segmentFound = true;
+                    returnWaypoint = wayPoints.get(wayPointAfterTarget);
 
                 }else {
 
-                    searchDistance = searchDistance - wayPoints.get(wayPointAfterTarget).distanceFromPrevious;
-                    wayPointAfterTarget ++;
+                    if(wayPointAfterTarget < wayPoints.size()){
+                        searchDistance =  - wayPoints.get(wayPointAfterTarget).distanceFromPrevious;
+                        wayPointAfterTarget ++;
+                    } else {
+                        throw new IllegalArgumentException("oopsie doopsie something went woopsie");
+                    }
 
                 }
 
@@ -152,6 +166,7 @@ public class Path {
 
         }
 
+        return returnWaypoint;
     }
 
     public static double pathComponent(){
