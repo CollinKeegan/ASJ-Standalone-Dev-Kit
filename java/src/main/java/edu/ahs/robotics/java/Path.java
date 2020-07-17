@@ -103,9 +103,9 @@ public class Path {
             double y = (z / c) * nextWaypoint.deltaYFromPrevious;
 
             double deltaX = nextWaypoint.point.getX() - wayPoints.get(wayPointAlong - 1).point.getX();
-            double deltaY = nextWaypoint.point.getY() - wayPoints.get(wayPointAlong - 1).point.getY()
+            double deltaY = nextWaypoint.point.getY() - wayPoints.get(wayPointAlong - 1).point.getY();
 
-            return new WayPoint(new Point(nextWaypoint.point.getX() - x, nextWaypoint.point.getY() - y), deltaX, deltaY, Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            return new WayPoint(new Point(nextWaypoint.point.getX() - x, nextWaypoint.point.getY() - y), deltaX, deltaY, Math.sqrt(deltaX * deltaX + deltaY * deltaY));
 
         }else if(nextWaypoint.componentAlongPath(current) == targetDistance){
 
@@ -131,14 +131,20 @@ public class Path {
                     double y = (z / c) * wayPoints.get(wayPointAfterTarget).deltaYFromPrevious;
 
                     double deltaX = wayPoints.get(wayPointAfterTarget).point.getX() - wayPoints.get(wayPointAfterTarget - 1).point.getX();
-                    double deltaY = wayPoints.get(wayPointAfterTarget).point.getY() - wayPoints.get(wayPointAfterTarget - 1).point.getY()
+                    double deltaY = wayPoints.get(wayPointAfterTarget).point.getY() - wayPoints.get(wayPointAfterTarget - 1).point.getY();
 
-                    return new WayPoint(new Point(nextWaypoint.point.getX() - x, nextWaypoint.point.getY() - y), deltaX, deltaY, Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                    return new WayPoint(new Point(nextWaypoint.point.getX() - x, nextWaypoint.point.getY() - y), deltaX, deltaY, Math.sqrt(deltaX * deltaX + deltaY * deltaY));
 
 
                 }else if (wayPoints.get(wayPointAfterTarget).distanceFromPrevious == targetDistance){
 
+                    return wayPoints.get(wayPointAfterTarget);
+                    segmentFound = true;
 
+                }else {
+
+                    searchDistance = searchDistance - wayPoints.get(wayPointAfterTarget).distanceFromPrevious;
+                    wayPointAfterTarget ++;
 
                 }
 
